@@ -4,19 +4,20 @@ import java.util.Random;
 
 public class Car {
     private String manufacturer;
-    private String engine;
-    private String color;
+    private Engine engine;
+    private Color color;
     private int count;
     private int price;
+    private Random random = new Random();
 
     public Car() {
     }
 
-    public Car(String manufacturer, String engine, String color) {
+    public Car(String manufacturer, Color color) {
         count = 1;
-        price = new Random().nextInt(1000);
+        price = random.nextInt(1000);
         this.manufacturer = manufacturer;
-        this.engine = engine;
+        engine = new Engine();
         this.color = color;
     }
 
@@ -28,23 +29,15 @@ public class Car {
         return manufacturer;
     }
 
-    public void setEngine(String engine) {
-        this.engine = engine;
-    }
-
-    public String getEngine() {
-        return engine;
-    }
-
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setCount() {
+    public void setCount(int count) {
         this.count = count;
     }
 
@@ -58,5 +51,12 @@ public class Car {
 
     public int getPrice() {
         return price;
+    }
+
+    public String toString() {
+        return engine.getType() + " power" + engine.getPower();
+    }
+    public Engine getEngine() {
+        return engine;
     }
 }
