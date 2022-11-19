@@ -41,14 +41,14 @@ public class CarService {
     }
 
     private static String checkIfCountTrue(Car car) {
-        String resultTrue = (car.engine.getPower() > 200) ?
+        String resultTrue = (car.getEngine().getPower() > 200) ?
                 "The car is ready for sale" : "The car is not ready for sale, " +
                 "power do not match the condition";
         return resultTrue;
     }
 
     private static String checkIfCountFalse(Car car) {
-        String resultFalse = car.engine.getPower() > 200 ?
+        String resultFalse = car.getEngine().getPower() > 200 ?
                 "The car is not ready for sale, count do not match the condition" :
                 "The car is not ready for sale, count and power do not match the condition";
         return resultFalse;

@@ -4,11 +4,11 @@ import java.util.Random;
 
 public class Car {
     private String manufacturer;
-    public Engine engine;
+    private Engine engine;
     private Color color;
     private int count;
     private int price;
-    Random random = new Random();
+    private Random random = new Random();
 
     public Car() {
     }
@@ -55,5 +55,8 @@ public class Car {
 
     public String toString() {
         return engine.getType() + " power" + engine.getPower();
+    }
+    public Engine getEngine() {
+        return engine;
     }
 }
