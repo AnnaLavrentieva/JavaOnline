@@ -20,4 +20,9 @@ public class Engine {
         return power;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s, power %s", type, power);
+    }
+
 }

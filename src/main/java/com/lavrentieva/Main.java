@@ -1,21 +1,30 @@
 package com.lavrentieva;
 
 import com.lavrentieva.model.Car;
+import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.service.CarService;
 
 public class Main {
     public static void main(String[] args) {
-        CarService carService = new CarService();
-        final Car carOne = carService.create();
-        final Car carTwo = carService.create();
-        final Car carThree = carService.create();
+        final CarService carService = new CarService(new CarArrayRepository());
 
-        carService.print(carOne);
-        carService.print(carTwo);
-        carService.print(carThree);
+        final Car car = carService.create();
+        carService.print(car);
+        carService.check(car);
+        System.out.println();
 
-        carService.check(carOne);
-        carService.check(carTwo);
-        carService.check(carThree);
+        System.out.println(carService.find(car.getId()));
+
+        carService.create(4);
+        carService.printAll();
+        final Car[] all = carService.getAll();
+
+        Car carFromArray = all[0];
+        carService.delete(carFromArray.getId());
+        carService.printAll();
+
+        carFromArray = all[2];
+        carService.changeRandomColor(carFromArray.getId());
+        System.out.println(carService.find(carFromArray.getId()));
     }
 }
