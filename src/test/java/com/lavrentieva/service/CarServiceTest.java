@@ -175,9 +175,8 @@ class CarServiceTest {
     void changeRandomColor() {
         String id = "777";
         Car car = new Car();
-        target.changeRandomColor(id);
         Mockito.when(repository.getById(id)).thenReturn(car);
-//        car.setColor(Color.getPINK());
+        target.changeRandomColor(id);
         Mockito.verify(repository).updateColor(Mockito.anyString(), Mockito.any(Color.class));
     }
 }
