@@ -3,6 +3,7 @@ package com.lavrentieva.service;
 import com.lavrentieva.model.Car;
 import com.lavrentieva.model.Color;
 import com.lavrentieva.repository.CarArrayRepository;
+import com.lavrentieva.util.RandomGenerator;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -25,7 +26,17 @@ public class CarService {
     public void create(final int count) {
         for (int i = 0; i < count; i++) {
             create();
+            print(car);
         }
+    }
+
+    public int createCarFromRandomAmount(RandomGenerator randomGenerator) {
+        int randomAmount = randomGenerator.randomInteger();
+        if (randomAmount == 0) {
+            return -1;
+        }
+        create(randomAmount);
+        return randomAmount;
     }
 
     private Color getRandomColor() {
@@ -68,13 +79,13 @@ public class CarService {
         return resultFalse;
     }
 
+    public Car[] getAll() {
+        return carArrayRepository.getAll();
+    }
+
     public void printAll() {
         Car[] all = carArrayRepository.getAll();
         System.out.println(Arrays.toString(all));
-    }
-
-    public Car[] getAll() {
-        return carArrayRepository.getAll();
     }
 
     public Car find(final String id) {
@@ -110,4 +121,5 @@ public class CarService {
         } while (randomColor == color);
         carArrayRepository.updateColor(car.getId(), randomColor);
     }
+
 }

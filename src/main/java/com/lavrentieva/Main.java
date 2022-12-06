@@ -3,6 +3,8 @@ package com.lavrentieva;
 import com.lavrentieva.model.Car;
 import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.service.CarService;
+import com.lavrentieva.util.RandomGenerator;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -16,15 +18,18 @@ public class Main {
         System.out.println(carService.find(car.getId()));
 
         carService.create(4);
-        carService.printAll();
-        final Car[] all = carService.getAll();
+        Car[] all = carService.getAll();
+        System.out.println();
 
-        Car carFromArray = all[0];
+        Car carFromArray = all[2];
         carService.delete(carFromArray.getId());
         carService.printAll();
 
-        carFromArray = all[2];
+        carFromArray = all[1];
         carService.changeRandomColor(carFromArray.getId());
         System.out.println(carService.find(carFromArray.getId()));
+
+        carService.createCarFromRandomAmount(new RandomGenerator());
+
     }
 }
