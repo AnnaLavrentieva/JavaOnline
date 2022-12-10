@@ -1,8 +1,16 @@
 package com.lavrentieva.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Random;
+import java.util.UUID;
+
+@Getter
+@Setter
 
 public class Car {
+    private final String id;
     private String manufacturer;
     private Engine engine;
     private Color color;
@@ -11,6 +19,7 @@ public class Car {
     private Random random = new Random();
 
     public Car() {
+        this.id = UUID.randomUUID().toString();
     }
 
     public Car(String manufacturer, Color color) {
@@ -19,44 +28,12 @@ public class Car {
         this.manufacturer = manufacturer;
         engine = new Engine();
         this.color = color;
+        this.id = UUID.randomUUID().toString();
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
+    @Override
     public String toString() {
-        return engine.getType() + " power" + engine.getPower();
-    }
-    public Engine getEngine() {
-        return engine;
+        return String.format("%s, %s, %s, %s, %s, %s %n", "Id: " + id, "Manufacturer: " + manufacturer,
+                "Engine: " + engine, "Color: " + color, "Count: " + count, "Price: " + price);
     }
 }
