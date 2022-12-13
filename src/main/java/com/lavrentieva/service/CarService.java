@@ -1,7 +1,6 @@
 package com.lavrentieva.service;
 
-import com.lavrentieva.model.Car;
-import com.lavrentieva.model.Color;
+import com.lavrentieva.model.*;
 import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.util.RandomGenerator;
 
@@ -11,22 +10,30 @@ import java.util.Random;
 public class CarService {
     private final CarArrayRepository carArrayRepository;
     private final Random random = new Random();
-    Car car;
+    PassengerCar passengerCar;
+    Truck truck;
 
     public CarService(final CarArrayRepository carArrayRepository) {
         this.carArrayRepository = carArrayRepository;
     }
 
-    public Car create() {
-        car = new Car(getRandomManufacturer(), getRandomColor());
-        carArrayRepository.save(car);
-        return car;
+    public PassengerCar createPassengerCar() {
+        passengerCar = new PassengerCar(getRandomManufacturer(), getRandomColor(), Type.getCAR(),
+                getRandomPassengerCount());
+        carArrayRepository.save(passengerCar);
+        return passengerCar;
+    }
+
+    public Truck createTruck() {
+        truck = new Truck(getRandomManufacturer(), getRandomColor(), Type.getTRUCK(),
+                getRandomLoadCapacity());
+        return truck;
     }
 
     public void create(final int count) {
         for (int i = 0; i < count; i++) {
-            create();
-            print(car);
+            createPassengerCar();
+            printPassengerCar(passengerCar);
         }
     }
 
@@ -49,46 +56,52 @@ public class CarService {
         return "man " + random.nextInt(1000);
     }
 
-    public void print(final Car car) {
-        System.out.println("ID: " + car.getId() + ", Manufacturer: " + car.getManufacturer() +
-                ", Engine: " + car.getEngine() + ", Color: " + car.getColor() + ", Count: " +
-                car.getCount() + ", Price: " + car.getPrice());
+    private int getRandomPassengerCount() {
+        return random.nextInt(0, 5);
     }
 
-    public static void check(final Car car) {
+    private int getRandomLoadCapacity() {
+        return random.nextInt(0, 1000);
+    }
+
+    public void printPassengerCar(final PassengerCar passengerCar) {
+        System.out.println(passengerCar);
+    }
+
+    public static void check(final PassengerCar passengerCar) {
         String check;
-        if (car.getCount() > 0) {
-            check = checkIfCountTrue(car);
+        if (passengerCar.getCount() > 0) {
+            check = checkIfCountTrue(passengerCar);
         } else {
-            check = checkIfCountFalse(car);
+            check = checkIfCountFalse(passengerCar);
         }
         System.out.println(check);
     }
 
-    private static String checkIfCountTrue(final Car car) {
-        String resultTrue = (car.getEngine().getPower() > 200) ?
+    private static String checkIfCountTrue(final PassengerCar passengerCar) {
+        String resultTrue = (passengerCar.getEngine().getPower() > 200) ?
                 "The car is ready for sale" : "The car is not ready for sale, " +
                 "power do not match the condition";
         return resultTrue;
     }
 
-    private static String checkIfCountFalse(final Car car) {
-        String resultFalse = car.getEngine().getPower() > 200 ?
+    private static String checkIfCountFalse(final PassengerCar passengerCar) {
+        String resultFalse = passengerCar.getEngine().getPower() > 200 ?
                 "The car is not ready for sale, count do not match the condition" :
                 "The car is not ready for sale, count and power do not match the condition";
         return resultFalse;
     }
 
-    public Car[] getAll() {
+    public PassengerCar[] getAll() {
         return carArrayRepository.getAll();
     }
 
     public void printAll() {
-        Car[] all = carArrayRepository.getAll();
+        PassengerCar[] all = carArrayRepository.getAll();
         System.out.println(Arrays.toString(all));
     }
 
-    public Car find(final String id) {
+    public PassengerCar find(final String id) {
         if (id == null || id.isEmpty()) {
             return null;
         }
@@ -106,20 +119,20 @@ public class CarService {
         if (id == null || id.isEmpty()) {
             return;
         }
-        final Car car = find(id);
-        if (car == null) {
+        final PassengerCar passengerCar = find(id);
+        if (passengerCar == null) {
             return;
         }
-        findAndChangeRandomColor(car);
+        findAndChangeRandomColor(passengerCar);
     }
 
-    private void findAndChangeRandomColor(Car car) {
-        final Color color = car.getColor();
+    private void findAndChangeRandomColor(PassengerCar passengerCar) {
+        final Color color = passengerCar.getColor();
         Color randomColor;
         do {
             randomColor = getRandomColor();
         } while (randomColor == color);
-        carArrayRepository.updateColor(car.getId(), randomColor);
+        carArrayRepository.updateColor(passengerCar.getId(), randomColor);
     }
 
 }
