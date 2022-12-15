@@ -17,6 +17,6 @@ public class Truck extends Car {
 
     @Override
     public String toString() {
-        return String.format("%s, %s %n", super.toString(), "Load Capacity: " + loadCapacity);
+        return String.format("%s, %s", super.toString(), "Load Capacity: " + loadCapacity);
     }
 }

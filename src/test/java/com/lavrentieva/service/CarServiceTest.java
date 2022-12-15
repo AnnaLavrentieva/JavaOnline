@@ -1,8 +1,6 @@
 package com.lavrentieva.service;
 
-import com.lavrentieva.model.Color;
-import com.lavrentieva.model.PassengerCar;
-import com.lavrentieva.model.Truck;
+import com.lavrentieva.model.*;
 import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.util.RandomGenerator;
 import org.junit.jupiter.api.Assertions;
@@ -25,51 +23,79 @@ class CarServiceTest {
     }
 
     @Test
-    void createAndCheckParametersPassengerCar() {
-        final PassengerCar passengerCar = target.createPassengerCar();
-        Assertions.assertNotNull(passengerCar);
-        Assertions.assertNotNull(passengerCar.getId());
-        Assertions.assertNotNull(passengerCar.getEngine());
-        Assertions.assertNotNull(passengerCar.getManufacturer());
-        Assertions.assertNotNull(passengerCar.getColor());
-        Assertions.assertNotNull(passengerCar.getType());
+    void createPassengersCar() {
+        final Car car = target.create(Type.CAR);
+        Assertions.assertNotNull(car);
+        Assertions.assertNotNull(car.getId());
+        Assertions.assertNotNull(car.getEngine());
+        Assertions.assertNotNull(car.getEngine());
+        Assertions.assertNotNull(car.getManufacturer());
+        Assertions.assertNotNull(car.getColor());
+        Assertions.assertNotNull(car.getType());
     }
 
     @Test
-    void createAndCheckParametersTruck() {
-        final Truck truck = target.createTruck();
-        Assertions.assertNotNull(truck);
-        Assertions.assertNotNull(truck.getId());
-        Assertions.assertNotNull(truck.getEngine());
-        Assertions.assertNotNull(truck.getManufacturer());
-        Assertions.assertNotNull(truck.getColor());
-        Assertions.assertNotNull(truck.getType());
+    void createTRUCK() {
+        final Car car = target.create(Type.TRUCK);
+        Assertions.assertNotNull(car);
+        Assertions.assertNotNull(car.getId());
+        Assertions.assertNotNull(car.getEngine());
+        Assertions.assertNotNull(car.getEngine());
+        Assertions.assertNotNull(car.getManufacturer());
+        Assertions.assertNotNull(car.getColor());
+        Assertions.assertNotNull(car.getType());
+    }
+
+    @Test
+    void carsDifferentTypesNotEquals() {
+        final Car car = target.create(Type.CAR);
+        final Car car1 = target.create(Type.TRUCK);
+        boolean expected = false;
+        boolean actual = target.carEquals(car, car1);
+        Assertions.assertEquals(actual, expected);
+    }
+
+    @Test
+    void carsOneTypeNotEquals() {
+        final Car car = target.create(Type.CAR);
+        final Car car1 = target.create(Type.CAR);
+        boolean expected = false;
+        boolean actual = target.carEquals(car, car1);
+        Assertions.assertEquals(actual, expected);
+    }
+
+    @Test
+    void carEquals() {
+        final Car car = target.create(Type.CAR);
+        boolean expected = true;
+        boolean actual = target.carEquals(car, car);
+        Assertions.assertEquals(actual, expected);
     }
 
     @Test
     void createWithCountParameterNegativeNumber() {
-        final PassengerCar passengerCar = new PassengerCar();
+        final Car car = new PassengerCar();
         int count = -1;
-        doNothing().when(repository).save(passengerCar);
+        doNothing().when(repository).save(car);
         target.create(count);
-        Mockito.verify(repository, Mockito.never()).save(passengerCar);
+        Mockito.verify(repository, Mockito.never()).save(car);
     }
 
     @Test
     void createWithCountParameterZero() {
-        final PassengerCar passengerCar = new PassengerCar();
+        final Car car = new PassengerCar();
         int count = 0;
-        doNothing().when(repository).save(passengerCar);
+        doNothing().when(repository).save(car);
         target.create(count);
-        Mockito.verify(repository, Mockito.never()).save(passengerCar);
+        Mockito.verify(repository, Mockito.never()).save(car);
     }
 
     @Test
     void createWithCorrectCountParameter() {
-        final PassengerCar passengerCar = new PassengerCar();
+        final Car car = new PassengerCar();
         int count = 13;
         target.create(count);
-        Assertions.assertNotNull(passengerCar);
+        Assertions.assertNotNull(car);
     }
 
     @Test
@@ -99,18 +125,18 @@ class CarServiceTest {
     }
 
     @Test
-    void print() {
-        final PassengerCar passengerCar = new PassengerCar();
-        Assertions.assertDoesNotThrow(() -> target.printPassengerCar(passengerCar));
+    void printCar() {
+        final Car car = new PassengerCar();
+        Assertions.assertDoesNotThrow(() -> target.printCar(car));
     }
 
     @Test
     void getAll() {
         int arrayLength = 1;
-        final PassengerCar[] expected = new PassengerCar[arrayLength];
+        final Car[] expected = new PassengerCar[arrayLength];
         expected[0] = new PassengerCar();
         Mockito.when(repository.getAll()).thenReturn(expected);
-        final PassengerCar[] actual = target.getAll();
+        final Car[] actual = target.getAll();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -122,34 +148,33 @@ class CarServiceTest {
 
     @Test
     void findIdIncorrectIdNull() {
-        final PassengerCar passengerCar = target.find(null);
-        Assertions.assertNull(passengerCar);
+        final Car car = target.find(null);
+        Assertions.assertNull(car);
     }
 
     @Test
     void findIdIncorrectIdEmpty() {
         String id = "";
-        final PassengerCar passengerCar = target.find(id);
-        Assertions.assertNull(passengerCar);
+        final Car car = target.find(id);
+        Assertions.assertNull(car);
     }
 
     @Test
     void findNotFound() {
         String id = "666";
         Mockito.when(repository.getById("666")).thenReturn(null);
-        final PassengerCar passengerCar = target.find(id);
-        Assertions.assertNull(passengerCar);
+        final Car car = target.find(id);
+        Assertions.assertNull(car);
     }
 
     @Test
     void findFound() {
         String id = "777";
-        PassengerCar expected = new PassengerCar();
+        Car expected = new PassengerCar();
         Mockito.when(repository.getById(id)).thenReturn(expected);
-        final PassengerCar actual = target.find(id);
+        final Car actual = target.find(id);
         Assertions.assertEquals(expected, actual);
     }
-
 
     @Test
     void deleteIfIdNull() {
@@ -187,8 +212,8 @@ class CarServiceTest {
     @Test
     void changeRandomColor() {
         String id = "777";
-        PassengerCar passengerCar = new PassengerCar();
-        Mockito.when(repository.getById(id)).thenReturn(passengerCar);
+        Car car = new PassengerCar();
+        Mockito.when(repository.getById(id)).thenReturn(car);
         target.changeRandomColor(id);
         Mockito.verify(repository).updateColor(Mockito.anyString(), Mockito.any(Color.class));
     }

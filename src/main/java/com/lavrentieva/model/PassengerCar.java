@@ -20,6 +20,6 @@ public class PassengerCar extends Car {
 
     @Override
     public String toString() {
-        return String.format("%s, %s %n", super.toString(), "Passenger Count: " + passengerCount);
+        return String.format("%s, %s", super.toString(), "Passenger Count: " + passengerCount);
     }
 }
