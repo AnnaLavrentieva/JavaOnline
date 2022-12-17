@@ -1,25 +1,25 @@
 package com.lavrentieva.repository;
 
+import com.lavrentieva.model.Car;
 import com.lavrentieva.model.Color;
-import com.lavrentieva.model.PassengerCar;
 
 public class CarArrayRepository {
-    private static PassengerCar[] cars = new PassengerCar[10];
+    private static Car[] cars = new Car[10];
 
-    public void save(final PassengerCar passengerCar) {
-        final int index = putCar(passengerCar);
+    public void save(final Car car) {
+        final int index = putCar(car);
         if (index == cars.length) {
             final int oldLength = cars.length;
             increaseArray();
-            cars[oldLength] = passengerCar;
+            cars[oldLength] = car;
         }
     }
 
-    private int putCar(final PassengerCar passengerCar) {
+    private int putCar(final Car car) {
         int index = 0;
         for (; index < cars.length; index++) {
             if (cars[index] == null) {
-                cars[index] = passengerCar;
+                cars[index] = car;
                 break;
             }
         }
@@ -27,22 +27,22 @@ public class CarArrayRepository {
     }
 
     private void increaseArray() {
-        PassengerCar[] newCars = new PassengerCar[cars.length * 2];
+        Car[] newCars = new Car[cars.length * 2];
         System.arraycopy(cars, 0, newCars, 0, cars.length);
         cars = newCars;
     }
 
-    public PassengerCar[] getAll() {
+    public Car[] getAll() {
         int newLength = foundLength();
-        PassengerCar[] newCars = new PassengerCar[newLength];
+        Car[] newCars = new Car[newLength];
         System.arraycopy(cars, 0, newCars, 0, newLength);
         return newCars;
     }
 
     private int foundLength() {
         int newLength = 0;
-        for (PassengerCar passengerCar : cars) {
-            if (passengerCar != null) {
+        for (Car car : cars) {
+            if (car != null) {
                 newLength++;
             } else {
                 break;
@@ -51,10 +51,10 @@ public class CarArrayRepository {
         return newLength;
     }
 
-    public PassengerCar getById(final String id) {
-        for (PassengerCar passengerCar : cars) {
-            if (passengerCar.getId().equals(id)) {
-                return passengerCar;
+    public Car getById(final String id) {
+        for (Car car : cars) {
+            if (car.getId().equals(id)) {
+                return car;
             }
         }
         return null;
@@ -73,9 +73,9 @@ public class CarArrayRepository {
     }
 
     public void updateColor(final String id, Color color) {
-        PassengerCar passengerCar = getById(id);
-        if (passengerCar != null) {
-            passengerCar.setColor(color);
+        Car car = getById(id);
+        if (car != null) {
+            car.setColor(color);
         }
     }
 }

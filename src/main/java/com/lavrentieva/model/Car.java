@@ -40,3 +40,4 @@ public abstract class Car implements CountRestore {
                 "Count: " + count, "Price: " + price);
     }
 }
+

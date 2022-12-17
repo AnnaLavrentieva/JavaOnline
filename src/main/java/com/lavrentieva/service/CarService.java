@@ -10,30 +10,41 @@ import java.util.Random;
 public class CarService {
     private final CarArrayRepository carArrayRepository;
     private final Random random = new Random();
-    PassengerCar passengerCar;
-    Truck truck;
+    private Car car;
 
     public CarService(final CarArrayRepository carArrayRepository) {
         this.carArrayRepository = carArrayRepository;
     }
 
-    public PassengerCar createPassengerCar() {
-        passengerCar = new PassengerCar(getRandomManufacturer(), getRandomColor(), Type.getCAR(),
-                getRandomPassengerCount());
-        carArrayRepository.save(passengerCar);
-        return passengerCar;
+    public Car create(final Type type) {
+        if (type.equals(Type.CAR)) {
+            car = createPassengerCar();
+            carArrayRepository.save(car);
+            return car;
+        } else if (type.equals(Type.TRUCK)) {
+            car = createTruck();
+            carArrayRepository.save(car);
+            return car;
+        }
+        return null;
     }
 
-    public Truck createTruck() {
-        truck = new Truck(getRandomManufacturer(), getRandomColor(), Type.getTRUCK(),
+    public Car createPassengerCar() {
+        car = new PassengerCar(getRandomManufacturer(), getRandomColor(), Type.getCAR(),
+                getRandomPassengerCount());
+        return car;
+    }
+
+    private Car createTruck() {
+        car = new Truck(getRandomManufacturer(), getRandomColor(), Type.getTRUCK(),
                 getRandomLoadCapacity());
-        return truck;
+        return car;
     }
 
     public void create(final int count) {
         for (int i = 0; i < count; i++) {
-            createPassengerCar();
-            printPassengerCar(passengerCar);
+            create(getRandomType());
+            printCar(car);
         }
     }
 
@@ -46,8 +57,36 @@ public class CarService {
         return randomAmount;
     }
 
+    public boolean carEquals(Car car1, Car car2) {
+        if (car1.getType().equals(car2.getType())) {
+            return checkIdHashCodeEquals(car1, car2);
+        } else {
+            System.out.println("Cars are not equals");
+            return false;
+        }
+    }
+
+    private boolean checkIdHashCodeEquals(Car car1, Car car2) {
+        if (car1.getId().hashCode() != car2.getId().hashCode()) {
+            System.out.println("Cars are not equals");
+            return false;
+        } else if (car1.getId().equals(car2.getId())) {
+            System.out.println("Cars are equals");
+            return true;
+        } else {
+            System.out.println("Cars are not equals");
+            return false;
+        }
+    }
+
     private Color getRandomColor() {
         final Color[] values = Color.values();
+        final int randomIndex = random.nextInt(values.length);
+        return values[randomIndex];
+    }
+
+    private Type getRandomType() {
+        final Type[] values = Type.values();
         final int randomIndex = random.nextInt(values.length);
         return values[randomIndex];
     }
@@ -64,44 +103,44 @@ public class CarService {
         return random.nextInt(0, 1000);
     }
 
-    public void printPassengerCar(final PassengerCar passengerCar) {
-        System.out.println(passengerCar);
+    public void printCar(Car car) {
+        System.out.println(car);
     }
 
-    public static void check(final PassengerCar passengerCar) {
+    public static void check(Car car) {
         String check;
-        if (passengerCar.getCount() > 0) {
-            check = checkIfCountTrue(passengerCar);
+        if (car.getCount() > 0) {
+            check = checkIfCountTrue(car);
         } else {
-            check = checkIfCountFalse(passengerCar);
+            check = checkIfCountFalse(car);
         }
         System.out.println(check);
     }
 
-    private static String checkIfCountTrue(final PassengerCar passengerCar) {
-        String resultTrue = (passengerCar.getEngine().getPower() > 200) ?
+    private static String checkIfCountTrue(Car car) {
+        String resultTrue = (car.getEngine().getPower() > 200) ?
                 "The car is ready for sale" : "The car is not ready for sale, " +
                 "power do not match the condition";
         return resultTrue;
     }
 
-    private static String checkIfCountFalse(final PassengerCar passengerCar) {
-        String resultFalse = passengerCar.getEngine().getPower() > 200 ?
+    private static String checkIfCountFalse(Car car) {
+        String resultFalse = car.getEngine().getPower() > 200 ?
                 "The car is not ready for sale, count do not match the condition" :
                 "The car is not ready for sale, count and power do not match the condition";
         return resultFalse;
     }
 
-    public PassengerCar[] getAll() {
+    public Car[] getAll() {
         return carArrayRepository.getAll();
     }
 
     public void printAll() {
-        PassengerCar[] all = carArrayRepository.getAll();
+        Car[] all = carArrayRepository.getAll();
         System.out.println(Arrays.toString(all));
     }
 
-    public PassengerCar find(final String id) {
+    public Car find(String id) {
         if (id == null || id.isEmpty()) {
             return null;
         }
@@ -119,20 +158,20 @@ public class CarService {
         if (id == null || id.isEmpty()) {
             return;
         }
-        final PassengerCar passengerCar = find(id);
-        if (passengerCar == null) {
+        Car car = find(id);
+        if (car == null) {
             return;
         }
-        findAndChangeRandomColor(passengerCar);
+        findAndChangeRandomColor(car);
     }
 
-    private void findAndChangeRandomColor(PassengerCar passengerCar) {
-        final Color color = passengerCar.getColor();
+    private void findAndChangeRandomColor(Car car) {
+        final Color color = car.getColor();
         Color randomColor;
         do {
             randomColor = getRandomColor();
         } while (randomColor == color);
-        carArrayRepository.updateColor(passengerCar.getId(), randomColor);
+        carArrayRepository.updateColor(car.getId(), randomColor);
     }
 
 }
