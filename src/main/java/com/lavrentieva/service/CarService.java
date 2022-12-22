@@ -5,6 +5,7 @@ import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.util.RandomGenerator;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
 
 public class CarService {
@@ -174,4 +175,59 @@ public class CarService {
         carArrayRepository.updateColor(car.getId(), randomColor);
     }
 
+    public void printManufacturerAndCount(final Car car) {
+        final Optional<Car> carOptional = Optional.ofNullable(car);
+        if (carOptional.isPresent()) {
+            System.out.println("Manufacturer: " + carOptional.get().getManufacturer() +
+                    " Count: " + carOptional.get().getCount());
+        }
+    }
+
+    public void printColor(final Car car) {
+        final Optional<Car> carOptional = Optional.ofNullable(car);
+        final Car car1 = carOptional.orElse(createPassengerCar());
+        System.out.println(car1.getColor());
+    }
+
+    public void checkCount(final Car car) {
+        final Optional<Car> carOptional = Optional.ofNullable(car);
+        carOptional.orElseThrow(() -> new UserInputException("Unchecked exception"));
+        carOptional.filter(c -> {
+                    return c.getCount() > 10;
+                })
+                .ifPresent(c -> {
+                    System.out.println("Manufacturer: " + c.getManufacturer() +
+                            " Count: " + c.getCount());
+                });
+    }
+
+    private static class UserInputException extends RuntimeException {
+        private UserInputException(String message) {
+            super(message);
+        }
+    }
+
+    public void printEngineInfo(final Car car) {
+        Optional<Car> carOptional = Optional.ofNullable(car);
+        Car car1 = carOptional.orElseGet(() -> {
+            System.out.println("New car was created");
+            return create(getRandomType());
+        });
+        Optional.of(car1).map(c -> {
+                    return c.getEngine();
+                })
+                .ifPresent(engine -> {
+                    System.out.println("Engine Power: " + engine.getPower());
+                });
+    }
+
+    public void printInfo(final Car car) {
+        Optional<Car> carOptional = Optional.ofNullable(car);
+        carOptional.ifPresentOrElse(c -> {
+                    printCar(carOptional.get());
+                },
+                () -> {
+                    printCar(create(getRandomType()));
+                });
+    }
 }

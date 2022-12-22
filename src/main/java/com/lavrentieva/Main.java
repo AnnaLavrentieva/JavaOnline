@@ -42,5 +42,21 @@ public class Main {
         System.out.println();
 
         carService.createCarFromRandomAmount(new RandomGenerator());
+        System.out.println();
+
+        carService.printManufacturerAndCount(car);
+        System.out.println();
+
+        carService.printColor(car);
+        System.out.println();
+
+        carService.checkCount(car);
+        System.out.println();
+
+        carService.printEngineInfo(car);
+        System.out.println();
+
+        carService.printInfo(car);
+        System.out.println();
     }
 }
