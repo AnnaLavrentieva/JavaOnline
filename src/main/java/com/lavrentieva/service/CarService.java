@@ -176,16 +176,17 @@ public class CarService {
     }
 
     public void printManufacturerAndCount(final Car car) {
-        final Optional<Car> carOptional = Optional.ofNullable(car);
-        if (carOptional.isPresent()) {
-            System.out.println("Manufacturer: " + carOptional.get().getManufacturer() +
-                    " Count: " + carOptional.get().getCount());
-        }
+        Optional.ofNullable(car)
+                .ifPresent(c -> {
+                    System.out.println("Manufacturer: " + c.getManufacturer() +
+                            " Count: " + c.getCount());
+                });
     }
 
     public void printColor(final Car car) {
-        final Optional<Car> carOptional = Optional.ofNullable(car);
-        final Car car1 = carOptional.orElse(createPassengerCar());
+        Car car1 = Optional
+                .ofNullable(car)
+                .orElse(createPassengerCar());
         System.out.println(car1.getColor());
     }
 
@@ -208,11 +209,12 @@ public class CarService {
     }
 
     public void printEngineInfo(final Car car) {
-        Optional<Car> carOptional = Optional.ofNullable(car);
-        Car car1 = carOptional.orElseGet(() -> {
-            System.out.println("New car was created");
-            return create(getRandomType());
-        });
+        Car car1 = Optional
+                .ofNullable(car)
+                .orElseGet(() -> {
+                    System.out.println("New car was created");
+                    return create(getRandomType());
+                });
         Optional.of(car1).map(c -> {
                     return c.getEngine();
                 })
@@ -222,12 +224,12 @@ public class CarService {
     }
 
     public void printInfo(final Car car) {
-        Optional<Car> carOptional = Optional.ofNullable(car);
-        carOptional.ifPresentOrElse(c -> {
-                    printCar(carOptional.get());
-                },
-                () -> {
-                    printCar(create(getRandomType()));
-                });
+        Optional.ofNullable(car)
+                .ifPresentOrElse(c -> {
+                            printCar(c);
+                        },
+                        () -> {
+                            printCar(create(getRandomType()));
+                        });
     }
 }
