@@ -4,6 +4,7 @@ import com.lavrentieva.model.Car;
 import com.lavrentieva.model.Type;
 import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.service.CarService;
+import com.lavrentieva.util.AlgorithmUtil;
 import com.lavrentieva.util.RandomGenerator;
 
 
@@ -29,6 +30,11 @@ public class Main {
 
         carService.create(4);
         Car[] all = carService.getAll();
+        System.out.println();
+
+        AlgorithmUtil.bubbleSort(all);
+        Car searchCar = AlgorithmUtil.binarySearch(car1, all);
+        System.out.println(searchCar);
         System.out.println();
 
         Car carFromArray = all[2];
