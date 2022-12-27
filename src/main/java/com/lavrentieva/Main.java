@@ -1,8 +1,8 @@
 package com.lavrentieva;
 
+import com.lavrentieva.container.GreenericContainer;
 import com.lavrentieva.model.Car;
 import com.lavrentieva.model.Type;
-import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.service.CarService;
 import com.lavrentieva.util.AlgorithmUtil;
 import com.lavrentieva.util.RandomGenerator;
@@ -10,7 +10,7 @@ import com.lavrentieva.util.RandomGenerator;
 
 public class Main {
     public static void main(String[] args) {
-        final CarService carService = new CarService(new CarArrayRepository());
+        final CarService carService = CarService.getInstance();
 
         Car car = carService.create(Type.CAR);
         carService.printCar(car);
@@ -63,6 +63,23 @@ public class Main {
         System.out.println();
 
         carService.printInfo(car);
+        System.out.println();
+
+        GreenericContainer<Car> greenericContainer = new GreenericContainer<>(car);
+
+        greenericContainer.print(car1);
+        System.out.println();
+
+        greenericContainer.increaseCount(car1);
+        greenericContainer.print(car1);
+        System.out.println();
+
+        greenericContainer.increaseCount(car1, 10);
+        greenericContainer.print(car1);
+        System.out.println();
+
+        greenericContainer.increaseCount(car1, 2.6);
+        greenericContainer.print(car1);
         System.out.println();
     }
 }

@@ -12,9 +12,24 @@ public class CarService {
     private final CarArrayRepository carArrayRepository;
     private final Random random = new Random();
     private Car car;
+    private static CarService instance;
 
     public CarService(final CarArrayRepository carArrayRepository) {
         this.carArrayRepository = carArrayRepository;
+    }
+    public static CarService getInstance(){
+        if (instance == null) {
+            instance = new CarService(CarArrayRepository.getInstance());
+        }
+        return instance;
+    }
+
+    //    для тестів:
+    public static CarService getInstance(final CarArrayRepository carArrayRepository){
+        if (instance == null) {
+            instance = new CarService(carArrayRepository);
+        }
+        return instance;
     }
 
     public Car create(final Type type) {

@@ -1,6 +1,7 @@
 package com.lavrentieva.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public enum Color {
     @Getter
