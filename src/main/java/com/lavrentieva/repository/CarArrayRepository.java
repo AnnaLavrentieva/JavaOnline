@@ -3,9 +3,21 @@ package com.lavrentieva.repository;
 import com.lavrentieva.model.Car;
 import com.lavrentieva.model.Color;
 
-public class CarArrayRepository {
+public class CarArrayRepository implements Repository<Car, String, Color> {
     private static Car[] cars = new Car[10];
+    private static CarArrayRepository instance;
 
+    private CarArrayRepository() {
+    }
+
+    public static CarArrayRepository getInstance() {
+        if (instance == null) {
+            instance = new CarArrayRepository();
+        }
+        return instance;
+    }
+
+    @Override
     public void save(final Car car) {
         final int index = putCar(car);
         if (index == cars.length) {
@@ -32,6 +44,7 @@ public class CarArrayRepository {
         cars = newCars;
     }
 
+    @Override
     public Car[] getAll() {
         int newLength = foundLength();
         Car[] newCars = new Car[newLength];
@@ -51,6 +64,7 @@ public class CarArrayRepository {
         return newLength;
     }
 
+    @Override
     public Car getById(final String id) {
         for (Car car : cars) {
             if (car.getId().equals(id)) {
@@ -60,6 +74,7 @@ public class CarArrayRepository {
         return null;
     }
 
+    @Override
     public void delete(final String id) {
         int index = 0;
         for (; index < cars.length; index++) {
@@ -72,6 +87,7 @@ public class CarArrayRepository {
         }
     }
 
+    @Override
     public void updateColor(final String id, Color color) {
         Car car = getById(id);
         if (car != null) {
