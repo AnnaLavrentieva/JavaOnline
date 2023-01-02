@@ -1,5 +1,6 @@
 package com.lavrentieva;
 
+import com.lavrentieva.container.CarList;
 import com.lavrentieva.container.GreenericContainer;
 import com.lavrentieva.model.Car;
 import com.lavrentieva.model.Type;
@@ -81,5 +82,41 @@ public class Main {
         greenericContainer.increaseCount(car1, 2.6);
         greenericContainer.print(car1);
         System.out.println();
+
+        CarList<Car> carList = new CarList<>(car);
+        carList.addTopOfList(car);
+        carList.addTopOfList(car1);
+        carList.addTopOfList(car1);
+        carList.addTopOfList(car);
+        carList.printCarList();
+        System.out.println();
+
+        carList.addEndOfList(car);
+        carList.addEndOfList(car1);
+        carList.addEndOfList(car);
+        carList.printCarList();
+        System.out.println();
+
+        carList.findPositionByElement(car);
+        System.out.println();
+
+        carList.addElementByPosition(3, car1);
+        carList.printCarList();
+        System.out.println();
+
+        carList.deleteElementByPosition(4);
+        carList.printCarList();
+        System.out.println();
+
+        carList.iterateCarList();
+        carList.printCarList();
+        System.out.println();
+
+        int sumCountCarsFromCarList = carList.sumCountCarsFromCarList();
+        System.out.println("Sum of car's count from CarList: " + sumCountCarsFromCarList);
+        carList.printCarList();
+        System.out.println();
+
+        
     }
 }
