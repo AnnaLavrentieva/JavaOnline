@@ -2,9 +2,12 @@ package com.lavrentieva.model;
 
 import lombok.NoArgsConstructor;
 
+import java.util.Random;
+
 @NoArgsConstructor
 public class PassengerCar extends Car {
     private int passengerCount;
+    private final Random random = new Random();
 
     public PassengerCar(String manufacturer, Color color, Type type, int passengerCount) {
         super(manufacturer, color, type);
@@ -15,7 +18,7 @@ public class PassengerCar extends Car {
     @Override
     public int restore() {
         System.out.println("Count was restore");
-        return 100;
+        return random.nextInt(1, 100);
     }
 
     @Override

@@ -1,12 +1,19 @@
 package com.lavrentieva;
 
+import com.lavrentieva.container.Branch;
 import com.lavrentieva.container.CarList;
+import com.lavrentieva.container.CarTree;
 import com.lavrentieva.container.GreenericContainer;
 import com.lavrentieva.model.Car;
 import com.lavrentieva.model.Type;
 import com.lavrentieva.service.CarService;
 import com.lavrentieva.util.AlgorithmUtil;
 import com.lavrentieva.util.RandomGenerator;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 public class Main {
@@ -117,6 +124,38 @@ public class Main {
         carList.printCarList();
         System.out.println();
 
-        
+        Car[] allNew = carService.getAll();
+        System.out.println(Arrays.toString(allNew));
+        Car car2 = allNew[2];
+        Car car3 = allNew[3];
+        Car car4 = allNew[4];
+        Car car5 = allNew[5];
+
+        CarTree<Car> carTree = new CarTree<>(car);
+
+        carTree.add(car);
+        carTree.add(car1);
+        carTree.add(car2);
+        carTree.add(car3);
+        carTree.add(car4);
+        carTree.add(car5);
+
+        int sumLeftBranch = carTree.sumCount(Branch.getLEFT());
+        System.out.println("The sum of the numbers of cars on the left branch is : "
+                + sumLeftBranch);
+
+        int sumRightBranch = carTree.sumCount(Branch.getRIGHT());
+        System.out.println("The sum of the numbers of cars on the right branch is : "
+                + sumRightBranch);
+        System.out.println();
+
+        List<Car> cars = new ArrayList<>();
+        Map<String, Integer> map = carService.createMapKeyManufacturer(cars);
+        System.out.println(map);
+
+        List<Car> cars1 = new ArrayList<>();
+        Map<Integer, List<Car>> map1 = carService.createMapKeyEnginePower(cars1);
+        System.out.println(map1);
+
     }
 }

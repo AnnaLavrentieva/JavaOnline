@@ -9,7 +9,7 @@ public class Engine {
 
     public Engine() {
         type = "type" + random.nextInt(1000);
-        power = random.nextInt(1000);
+        power = random.nextInt(1,7);
     }
 
     public String getType() {

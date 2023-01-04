@@ -1,7 +1,10 @@
 package com.lavrentieva.model;
 
+import java.util.Random;
+
 public class Truck extends Car {
     private int loadCapacity;
+    private final Random random = new Random();
 
     public Truck(String manufacturer, Color color, Type type, int loadCapacity) {
         super(manufacturer, color, type);
@@ -12,7 +15,7 @@ public class Truck extends Car {
     @Override
     public int restore() {
         System.out.println("Count was restore");
-        return 50;
+        return random.nextInt(1, 100);
     }
 
     @Override
