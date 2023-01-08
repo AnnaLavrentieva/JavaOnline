@@ -5,11 +5,17 @@ import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.util.RandomGenerator;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class CarService {
     private final CarArrayRepository carArrayRepository;
     private final Random random = new Random();
     private Car car;
+    private PassengerCar passengerCar;
+    private Truck truck;
     private static CarService instance;
 
 
@@ -45,16 +51,16 @@ public class CarService {
         return null;
     }
 
-    public Car createPassengerCar() {
-        car = new PassengerCar(getRandomManufacturer(), getRandomColor(), Type.getCAR(),
+    public PassengerCar createPassengerCar() {
+        passengerCar = new PassengerCar(getRandomManufacturer(), getRandomColor(), Type.getCAR(),
                 getRandomPassengerCount());
-        return car;
+        return passengerCar;
     }
 
-    private Car createTruck() {
-        car = new Truck(getRandomManufacturer(), getRandomColor(), Type.getTRUCK(),
+    private Truck createTruck() {
+        truck = new Truck(getRandomManufacturer(), getRandomColor(), Type.getTRUCK(),
                 getRandomLoadCapacity());
-        return car;
+        return truck;
     }
 
     public void create(final int count) {
@@ -248,7 +254,8 @@ public class CarService {
                         });
     }
 
-    public Map createMapKeyManufacturer(List<Car> cars) {
+    public Map<String, Integer> createMapKeyManufacturer(List<Car> cars) {
+        Objects.requireNonNull(cars);
         cars = Arrays.asList(getAll());
         Map<String, Integer> map = new HashMap<>();
         for (int i = 0; i < cars.size(); i++) {
@@ -260,7 +267,8 @@ public class CarService {
         return map;
     }
 
-    public Map createMapKeyEnginePower(List<Car> cars) {
+    public Map<Integer, List<Car>> createMapKeyEnginePower(List<Car> cars) {
+        Objects.requireNonNull(cars);
         cars = Arrays.asList(getAll());
         Map<Integer, List<Car>> map = new HashMap<>();
         for (Car car : cars) {
@@ -275,4 +283,136 @@ public class CarService {
         }
         return map;
     }
+
+    public void findManufacturerByPrice(final List<Car> cars, final int price) {
+        if (cars == null) {
+            return;
+        }
+        cars.stream()
+                .filter(car -> car.getPrice() > price)
+                .forEach(car -> System.out.println("Manufacturer of car with a price greater than "
+                        + price + ": " + car.getManufacturer()));
+    }
+
+    public int countSum(final List<Car> cars) {
+        final int result;
+        if (cars == null) {
+            System.out.println("List is empty");
+            return 0;
+        }
+        result = cars.stream()
+                .reduce(0, (sumCount, car) -> sumCount + car.getCount(), Integer::sum);
+        return result;
+    }
+
+    public Map<String, Type> mapToMap(final List<Car> cars) {
+        Objects.requireNonNull(cars);
+        final Map<String, Type> map = cars.stream()
+                .sorted(Comparator.comparing(Car::getManufacturer))
+                .distinct()
+                .collect(Collectors.toMap(
+                        Car::getId,
+                        Car::getType,
+                        (t1, t2) -> t1,
+                        LinkedHashMap::new));
+        return map;
+    }
+
+    public IntSummaryStatistics statisticPrice(final List<Car> cars) {
+        Objects.requireNonNull(cars);
+        IntSummaryStatistics statistic = cars.stream()
+                .mapToInt(Car::getPrice)
+                .summaryStatistics();
+        return statistic;
+    }
+
+    public boolean priceCheck(final List<Car> cars, int price) {
+        Objects.requireNonNull(cars);
+        Predicate<List<Car>> predicate = list -> {
+            boolean result = cars.stream()
+                    .map(Car::getPrice)
+                    .allMatch(carPrice -> carPrice > price);
+            return result;
+        };
+        return predicate.test(cars);
+    }
+
+    public Car MapToObject(final Map<String, Object> getMap) {
+        Objects.requireNonNull(getMap);
+        Function<Map<String, Object>, Car> function = map -> {
+            final Type type = (Type) map.get("Type");
+            if (type.equals(Type.CAR)) {
+                return createPassengerCarFromMap(map);
+            } else {
+                return createTruckFromMap(map);
+            }
+        };
+        return function.apply(getMap);
+    }
+
+    public Map<Color, Integer> innerList(List<List<Car>> list, int price) {
+        Objects.requireNonNull(list);
+        Map<Color, Integer> map = list.stream()
+                .flatMap(List::stream)
+                .sorted(Comparator.comparing(Car::getColor))
+                .peek(System.out::println)
+                .filter(car -> car.getPrice() > price)
+                .collect(Collectors.toMap(
+                        Car::getColor,
+                        Car::getCount,
+                        Integer::sum,
+                        LinkedHashMap::new
+                ));
+//        System.out.println(map);
+        return map;
+    }
+
+    private static PassengerCar createPassengerCarFromMap(final Map<String, Object> getMap) {
+        final PassengerCar passengerCarNew = new PassengerCar();
+        passengerCarNew.setPassengerCount((int) getMap.get("PassengerCount"));
+        createGeneralCarFieldsFromMap(getMap, passengerCarNew);
+        return passengerCarNew;
+    }
+
+    private static Truck createTruckFromMap(final Map<String, Object> getMap) {
+        final Truck truckNew = new Truck();
+        truckNew.setLoadCapacity((int) getMap.get("LoadCapacity"));
+        createGeneralCarFieldsFromMap(getMap, truckNew);
+        return truckNew;
+    }
+
+    private static void createGeneralCarFieldsFromMap(final Map<String, Object> getMap1, final Car car) {
+        car.setManufacturer((String) getMap1.get("Manufacturer"));
+        car.setColor((Color) getMap1.get("Color"));
+        car.setCount((int) getMap1.get("Count"));
+        car.setPrice((int) getMap1.get("Price"));
+        car.setType((Type) getMap1.get("Type"));
+        car.setEngine((Engine) getMap1.get("Engine"));
+    }
+
+    public Map<String, Object> createMapForMethodMapToObject(final Type type) {
+        Map<String, Object> map = new HashMap<>();
+        Car carNew = null;
+        if (type.equals(Type.TRUCK)) {
+            Truck truck = createTruck();
+            map.put("LoadCapacity", (truck.getLoadCapacity()));
+            carNew = truck;
+        } else if (type.equals(Type.CAR)) {
+            PassengerCar passengerCar = createPassengerCar();
+            map.put("PassengerCount", (passengerCar.getPassengerCount()));
+            carNew = passengerCar;
+        }
+        mapPutGeneralFields(carNew, map);
+        return map;
+    }
+
+    private void mapPutGeneralFields(final Car carNew, final Map<String, Object> map) {
+        map.put("Manufacturer", carNew.getManufacturer());
+        map.put("Color", carNew.getColor());
+        map.put("Count", carNew.getCount());
+        map.put("Price", carNew.getPrice());
+        map.put("Type", carNew.getType());
+        map.put("Engine", carNew.getEngine());
+    }
 }
+

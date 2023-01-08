@@ -5,15 +5,13 @@ import com.lavrentieva.container.CarList;
 import com.lavrentieva.container.CarTree;
 import com.lavrentieva.container.GreenericContainer;
 import com.lavrentieva.model.Car;
+import com.lavrentieva.model.Color;
 import com.lavrentieva.model.Type;
 import com.lavrentieva.service.CarService;
 import com.lavrentieva.util.AlgorithmUtil;
 import com.lavrentieva.util.RandomGenerator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class Main {
@@ -129,7 +127,6 @@ public class Main {
         Car car2 = allNew[2];
         Car car3 = allNew[3];
         Car car4 = allNew[4];
-        Car car5 = allNew[5];
 
         CarTree<Car> carTree = new CarTree<>(car);
 
@@ -138,7 +135,6 @@ public class Main {
         carTree.add(car2);
         carTree.add(car3);
         carTree.add(car4);
-        carTree.add(car5);
 
         int sumLeftBranch = carTree.sumCount(Branch.getLEFT());
         System.out.println("The sum of the numbers of cars on the left branch is : "
@@ -157,5 +153,47 @@ public class Main {
         Map<Integer, List<Car>> map1 = carService.createMapKeyEnginePower(cars1);
         System.out.println(map1);
 
+        List<Car> carArrayList = new ArrayList<>();
+        carArrayList.add(car);
+        carArrayList.add(car1);
+        carArrayList.add(car2);
+        carArrayList.add(car3);
+        carArrayList.add(car4);
+        System.out.println(carArrayList);
+        System.out.println();
+
+        carService.findManufacturerByPrice(carArrayList, 500);
+        System.out.println();
+
+        final int sumOfCountInList = carService.countSum(carArrayList);
+        System.out.println("The sum of car's count from List is: " + sumOfCountInList);
+        System.out.println();
+
+        final Map<String, Type> mapNew = carService.mapToMap(carArrayList);
+        System.out.println(mapNew);
+        System.out.println();
+
+        IntSummaryStatistics statistic = carService.statisticPrice(carArrayList);
+        System.out.println(statistic);
+        System.out.println();
+
+        boolean priceCheck = carService.priceCheck(carArrayList, 10);
+        System.out.println("All cars from List have price bigger than set price: " +
+                priceCheck);
+        System.out.println();
+
+        Map<String, Object> mapForCheckMethod = carService.createMapForMethodMapToObject(Type.TRUCK);
+        System.out.println(mapForCheckMethod);
+        System.out.println();
+        Car carFromMap = carService.MapToObject(mapForCheckMethod);
+        System.out.println(carFromMap);
+        System.out.println();
+
+        List<List<Car>> listOnlyForCheckMethod = new ArrayList<>();
+        listOnlyForCheckMethod.add(carArrayList);
+        System.out.println(listOnlyForCheckMethod);
+        System.out.println();
+        Map<Color, Integer> map2 = carService.innerList(listOnlyForCheckMethod, 500);
+        System.out.println(map2);
     }
 }
