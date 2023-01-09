@@ -4,9 +4,7 @@ import com.lavrentieva.model.*;
 import com.lavrentieva.repository.CarArrayRepository;
 import com.lavrentieva.util.RandomGenerator;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class CarService {
     private final CarArrayRepository carArrayRepository;
@@ -14,10 +12,12 @@ public class CarService {
     private Car car;
     private static CarService instance;
 
+
     public CarService(final CarArrayRepository carArrayRepository) {
         this.carArrayRepository = carArrayRepository;
     }
-    public static CarService getInstance(){
+
+    public static CarService getInstance() {
         if (instance == null) {
             instance = new CarService(CarArrayRepository.getInstance());
         }
@@ -25,7 +25,7 @@ public class CarService {
     }
 
     //    для тестів:
-    public static CarService getInstance(final CarArrayRepository carArrayRepository){
+    public static CarService getInstance(final CarArrayRepository carArrayRepository) {
         if (instance == null) {
             instance = new CarService(carArrayRepository);
         }
@@ -246,5 +246,33 @@ public class CarService {
                         () -> {
                             printCar(create(getRandomType()));
                         });
+    }
+
+    public Map createMapKeyManufacturer(List<Car> cars) {
+        cars = Arrays.asList(getAll());
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < cars.size(); i++) {
+            String manufacturer = cars.get(i).getManufacturer();
+            int count = map.containsKey(manufacturer) ? map.get(manufacturer) : 0;
+            count += cars.get(i).getCount();
+            map.put(manufacturer, count);
+        }
+        return map;
+    }
+
+    public Map createMapKeyEnginePower(List<Car> cars) {
+        cars = Arrays.asList(getAll());
+        Map<Integer, List<Car>> map = new HashMap<>();
+        for (Car car : cars) {
+            final int power = car.getEngine().getPower();
+            if (map.containsKey(power)) {
+                map.get(power).add(car);
+            } else {
+                List<Car> carList = new ArrayList<>();
+                carList.add(car);
+                map.put(power, carList);
+            }
+        }
+        return map;
     }
 }
