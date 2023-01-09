@@ -1,7 +1,13 @@
 package com.lavrentieva.model;
 
-import java.util.Random;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.Random;
+@Getter
+@Setter
+@NoArgsConstructor
 public class Truck extends Car {
     private int loadCapacity;
     private final Random random = new Random();
@@ -15,7 +21,7 @@ public class Truck extends Car {
     @Override
     public int restore() {
         System.out.println("Count was restore");
-        return random.nextInt(1, 100);
+        return random.nextInt(1,100);
     }
 
     @Override

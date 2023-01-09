@@ -1,9 +1,12 @@
 package com.lavrentieva.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Random;
-
+@Getter
+@Setter
 @NoArgsConstructor
 public class PassengerCar extends Car {
     private int passengerCount;
